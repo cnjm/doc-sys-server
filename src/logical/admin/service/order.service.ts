@@ -37,12 +37,12 @@ export class OrderService {
   // }
 
   /**
-   * 获取账号列表
+   * 获取订单列表
    */
   async getOrderList(query: GetOrderListDto): Promise<any> {
     try {
       const { pageSize = 20, page = 1 } = query;
-      let qb = this.orderRepository.createQueryBuilder("admin");
+      let qb = this.orderRepository.createQueryBuilder("order");
       qb = qb.skip(pageSize * (page - 1)).take(pageSize);
 
       const data = await qb.getManyAndCount();
@@ -51,6 +51,30 @@ export class OrderService {
         return item;
       });
       const result = { items, total: data[1] };
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException("查询失败");
+    }
+  }
+  /**
+   * 获取全部订单列表
+   */
+  async getOrderListAll(): Promise<any> {
+    try {
+      let qb = this.orderRepository.createQueryBuilder("order");
+      qb = qb.select([
+        "order.id",
+        "order.merchantId",
+        "order.shopName",
+        "order.orderNo",
+        "order.productId",
+        "order.productName",
+        "order.amount",
+        "order.orderNum",
+      ]);
+      const data = await qb.getManyAndCount();
+      const [items, total] = data;
+      const result = { items, total };
       return result;
     } catch (error) {
       throw new InternalServerErrorException("查询失败");

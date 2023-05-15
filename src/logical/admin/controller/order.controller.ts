@@ -20,8 +20,15 @@ export class OrderController {
 
   @Get("getOrderList")
   @Roles(RoleEnum.SUPER)
-  @ApiOperation({ summary: "获取账户列表" })
+  @ApiOperation({ summary: "获取订单列表" })
   async getOrderList(@Query() query: GetOrderListDto) {
     return this.orderService.getOrderList(query);
+  }
+
+  @Get("getOrderListAll")
+  @Roles(RoleEnum.SUPER)
+  @ApiOperation({ summary: "获取全部订单列表" })
+  async getOrderListAll() {
+    return this.orderService.getOrderListAll();
   }
 }
