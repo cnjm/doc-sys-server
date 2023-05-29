@@ -69,7 +69,7 @@ export class Order extends BaseEntity {
   @Column({ comment: "优惠总额", default: 0 })
   totalDiscount: number;
 
-  @Column({ comment: "实付金额", default: 0 })
+  @Column({ type: "double", comment: "实付金额", default: 0 })
   amount: number;
 
   @Column({ comment: "商品ID", default: "" })
