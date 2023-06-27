@@ -31,4 +31,10 @@ export class OrderController {
   async getOrderListAll() {
     return this.orderService.getOrderListAll();
   }
+
+  @Post("delOrderListAll")
+  @ApiOperation({ summary: "删除所有订单列表" })
+  async delOrderListAll() {
+    return this.orderService.delOrderListAll();
+  }
 }

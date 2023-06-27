@@ -10,6 +10,7 @@ import { AdministratorsModule } from "./logical/admin/module/administrators.modu
 import { RoleModule } from "./logical/admin/module/role.module";
 import { ExcelModule } from "./logical/common/excel/excel.module";
 import { OrderModule } from "./logical/admin/module/order.module";
+import { AdModule } from "./logical/admin/module/ad.module";
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { OrderModule } from "./logical/admin/module/order.module";
     RoleModule,
     ExcelModule,
     OrderModule,
+    AdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

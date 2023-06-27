@@ -41,9 +41,12 @@ export class OrderService {
    */
   async getOrderList(query: GetOrderListDto): Promise<any> {
     try {
-      const { pageSize = 20, page = 1 } = query;
+      const { pageSize = 20, page = 1, orderNo } = query;
       let qb = this.orderRepository.createQueryBuilder("order");
       qb = qb.skip(pageSize * (page - 1)).take(pageSize);
+      if (orderNo) {
+        qb = qb.where("order.orderNo = :orderNo", { orderNo });
+      }
 
       const data = await qb.getManyAndCount();
       const items = data[0].map((item) => {
@@ -98,6 +101,18 @@ export class OrderService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException("导入失败");
+    }
+  }
+
+  /**
+   * 删除所有广告列表
+   */
+  async delOrderListAll(): Promise<any> {
+    try {
+      await getConnection().createQueryBuilder().delete().from(Order).execute();
+      return "ok";
+    } catch (error) {
+      throw new InternalServerErrorException("查询失败");
     }
   }
 }
