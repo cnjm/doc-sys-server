@@ -57,7 +57,7 @@ export class AdministratorsController {
   }
 
   @Post("addAccount")
-  @Roles(RoleEnum.SUPER)
+  // @Roles(RoleEnum.SUPER)
   @ApiOperation({ summary: "添加管理员账号" })
   async addAccount(@Body() params: AddAccountDto): Promise<string> {
     return this.administratorsService.addAccount(params);

@@ -37,4 +37,28 @@ export class OrderController {
   async delOrderListAll() {
     return this.orderService.delOrderListAll();
   }
+
+  @Post("importStatisticsOrder")
+  @ApiOperation({ summary: "批量添加统计订单" })
+  async ImportStatisticsOrder(@Body() params) {
+    return this.orderService.ImportStatisticsOrder(params);
+  }
+
+  @Get("getStatisticsOrderList")
+  @ApiOperation({ summary: "获取统计订单列表" })
+  async getStatisticsOrderList(@Query() query: GetOrderListDto) {
+    return this.orderService.getStatisticsOrderList(query);
+  }
+
+  @Get("getStatisticsOrderListAll")
+  @ApiOperation({ summary: "获取全部统计订单列表" })
+  async getStatisticsOrderListAll() {
+    return this.orderService.getStatisticsOrderListAll();
+  }
+
+  @Post("delStatisticsOrderListAll")
+  @ApiOperation({ summary: "删除所有统计订单列表" })
+  async delStatisticsOrderListAll() {
+    return this.orderService.delStatisticsOrderListAll();
+  }
 }

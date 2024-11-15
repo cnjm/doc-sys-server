@@ -65,10 +65,10 @@ export class AppModule {
           path: "/api/admin/administrators/login",
           method: RequestMethod.POST,
         },
-        // {
-        //   path: "/api/admin/administrators/addAccount",
-        //   method: RequestMethod.POST,
-        // },
+        {
+          path: "/api/admin/administrators/addAccount",
+          method: RequestMethod.POST,
+        },
       )
       .forRoutes("/admin", "/common");
   }

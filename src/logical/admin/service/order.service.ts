@@ -4,12 +4,15 @@ import { Order } from "../../../entities/Order.entity";
 import { getConnection, Repository } from "typeorm";
 import { GetOrderListDto } from "../dto/order.dto";
 import { format } from "/@/utils/moment";
+import { Statistics } from "/@/entities/Statistics.entity";
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
+    @InjectRepository(Statistics)
+    private orderStatisticsRepository: Repository<Statistics>,
   ) {
     //
   }
@@ -110,6 +113,87 @@ export class OrderService {
   async delOrderListAll(): Promise<any> {
     try {
       await getConnection().createQueryBuilder().delete().from(Order).execute();
+      return "ok";
+    } catch (error) {
+      throw new InternalServerErrorException("查询失败");
+    }
+  }
+
+  /**
+   * 导入统计订单
+   * @param params 订单数据
+   */
+  async ImportStatisticsOrder(params): Promise<string> {
+    try {
+      // await this.orderRepository.insert(params.orders);
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(Statistics)
+        .values(params.orders)
+        .execute();
+      return "导入成功";
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException("导入失败");
+    }
+  }
+
+  /**
+   * 获取统计订单列表
+   */
+  async getStatisticsOrderList(query: GetOrderListDto): Promise<any> {
+    try {
+      const { pageSize = 20, page = 1, orderNo } = query;
+      let qb = this.orderStatisticsRepository.createQueryBuilder("order");
+      qb = qb.skip(pageSize * (page - 1)).take(pageSize);
+      if (orderNo) {
+        qb = qb.where("order.orderNo = :orderNo", { orderNo });
+      }
+
+      const data = await qb.getManyAndCount();
+      const items = data[0].map((item) => {
+        item.create_at = format(item.create_at, "YYYY-MM-DD HH:mm:ss");
+        return item;
+      });
+      const result = { items, total: data[1] };
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException("查询失败");
+    }
+  }
+
+  /**
+   * 获取统计全部订单列表
+   */
+  async getStatisticsOrderListAll(): Promise<any> {
+    try {
+      let qb = this.orderStatisticsRepository.createQueryBuilder("order");
+      qb = qb.select([
+        "order.id",
+        "order.shopName",
+        "order.goodName",
+        "order.time",
+      ]);
+      const data = await qb.getManyAndCount();
+      const [items, total] = data;
+      const result = { items, total };
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException("查询失败");
+    }
+  }
+
+  /**
+   * 删除所有统计订单
+   */
+  async delStatisticsOrderListAll(): Promise<any> {
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(Statistics)
+        .execute();
       return "ok";
     } catch (error) {
       throw new InternalServerErrorException("查询失败");
